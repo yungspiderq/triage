@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "triage:splint"
+    },
+    "title": {
+      "translate": "triage.advancement.bone_setter.title"
+    },
+    "description": {
+      "translate": "triage.advancement.bone_setter.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:field_dressing"
+}

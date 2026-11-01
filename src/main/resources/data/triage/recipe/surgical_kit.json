@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "triage:medkit" },
+    { "item": "minecraft:ghast_tear" },
+    { "item": "minecraft:iron_ingot" },
+    { "item": "minecraft:iron_ingot" }
+  ],
+  "result": {
+    "id": "triage:surgical_kit",
+    "count": 1
+  }
+}

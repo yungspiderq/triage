@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "minecraft:leather" },
+    { "item": "minecraft:string" },
+    { "item": "minecraft:string" },
+    { "item": "minecraft:iron_nugget" }
+  ],
+  "result": {
+    "id": "triage:blood_bag",
+    "count": 2
+  }
+}

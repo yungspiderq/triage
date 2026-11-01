@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "triage:block/medical_table_side",
+    "down": "minecraft:block/oak_planks",
+    "up": "triage:block/medical_table_top",
+    "north": "triage:block/medical_table_front",
+    "south": "triage:block/medical_table_front",
+    "east": "triage:block/medical_table_side",
+    "west": "triage:block/medical_table_side"
+  }
+}

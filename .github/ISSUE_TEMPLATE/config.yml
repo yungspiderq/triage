@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Triage README
+    url: https://github.com/yungspiderq/triage#readme
+    about: Installation, controls, features and known limitations.
+  - name: Latest release
+    url: https://github.com/yungspiderq/triage/releases
+    about: Download the jar for your loader and Minecraft version.
+  - name: Building from source
+    url: https://github.com/yungspiderq/triage/blob/main/BUILDING.md
+    about: Which branch to use, which JDK to install and what goes in libs/.

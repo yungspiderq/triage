@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " I ",
+    "I I",
+    " N "
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_nugget" },
+    "N": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "id": "triage:forceps", "count": 1 }
+}

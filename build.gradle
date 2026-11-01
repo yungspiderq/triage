@@ -1,0 +1,217 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.143'
+    id 'com.modrinth.minotaur' version '2.9.0'
+    id 'net.darkhax.curseforgegradle' version '1.3.33'
+    id 'idea'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    // The loader is in the file name because there are now four of them and a
+    // download folder full of triage-1.21.1-1.9.0.jar tells nobody which is which.
+    archivesName = "${mod_id}-neoforge-${minecraft_version}"
+}
+
+// 1.21.1 ships Java 21 to end users.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    // Village pools have no append API, so the clinic is added at runtime to the list
+    // the jigsaw generator reads. See META-INF/accesstransformer.cfg for why.
+    accessTransformers.from('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            client()
+            // -PjoinServer=localhost sends this client straight into a server instead of
+            // the main menu. Off unless asked for, and worth having: half of what this
+            // mod does needs two players on one server, and getting there by hand is
+            // four clicks per client per test.
+            if (project.hasProperty('joinServer')) {
+                programArguments.addAll '--quickPlayMultiplayer', project.property('joinServer').toString()
+            }
+        }
+
+        // Second client, for checking that two players on one server keep their own
+        // bodies: own game directory and own name.
+        clientTwo {
+            client()
+            gameDirectory = project.file('run-client2')
+            programArguments.addAll '--username', 'Dev2'
+            if (project.hasProperty('joinServer')) {
+                programArguments.addAll '--quickPlayMultiplayer', project.property('joinServer').toString()
+            }
+        }
+
+        server {
+            server()
+            gameDirectory = project.file('run-server')
+            programArgument '--nogui'
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Optional compat, compiled against and never shipped.
+//
+// Sable: Ragdolls publishes to mavenLocal only, so there is no coordinate anybody
+// else can resolve; both jars sit in libs/ and are compileOnly. That is the whole
+// arrangement: Triage has no dependencies, the compat code is guarded by
+// ModList.isLoaded at runtime, and neither jar may ever end up inside our own -
+// the ragdoll one is All Rights Reserved and Sable is PolyForm Shield.
+//
+// Dropping libs/ breaks the build rather than the mod. See DESIGN.md.
+// ---------------------------------------------------------------------------
+dependencies {
+    compileOnly files('libs/sable_player_ragdoll-1.21.1-0.7.5.jar')
+    // Only here so javac can resolve the Sable types that appear in signatures on
+    // the ragdoll API's own classes. Nothing in Triage touches Sable directly.
+    compileOnly files('libs/sable-neoforge-1.21.1-2.0.3.jar')
+}
+
+// Expands ${...} placeholders in src/main/templates into the built resources.
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// MIT asks for the notice to travel with every copy, and the jar is a copy.
+tasks.named('jar').configure {
+    from(rootProject.file('LICENSE'))
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Publishing. Tokens come from the environment and never live in the repo; the
+// project ids go into gradle.properties once the projects exist on the sites.
+//
+// Note that applying CurseForgeGradle means Gradle itself has to run on JDK 25 -
+// it refuses to resolve on anything older. The mod is still built for Java 21.
+// ---------------------------------------------------------------------------
+var modrinthToken = providers.environmentVariable('MODRINTH_TOKEN')
+var curseforgeToken = providers.environmentVariable('CURSEFORGE_TOKEN')
+var readmeText = providers.fileContents(layout.projectDirectory.file('README.md')).asText
+
+// The description on a file people are deciding whether to download: the newest
+// section of the English release notes and nothing else.
+//
+// This used to send CHANGELOG.md whole. That file is the Russian working log, it is
+// every version the mod has ever had, and it is thirty kilobytes of reasoning about
+// packets - which is the right thing to keep and the wrong thing to put in front of
+// somebody looking at a download button.
+var changelogText = providers.fileContents(layout.projectDirectory.file('CHANGELOG-RELEASE.md'))
+        .asText.map { text ->
+            int next = text.indexOf('\n# ', 1)
+            String top = next < 0 ? text : text.substring(0, next)
+            top.replaceAll(/(?s)\s*-{3,}\s*$/, '').trim()
+        }
+
+// Read here, at configuration time, and never again. Both guards below run while the
+// task executes, and a task that reaches for `project` then is refused outright by the
+// configuration cache - which this build has switched on. The failure looked like a
+// Gradle problem rather than a missing id, so the guards never got to say the useful
+// thing they were written to say.
+var modrinthProjectId = (project.findProperty('modrinth_project_id') ?: '').toString()
+var curseforgeProjectId = (project.findProperty('curseforge_project_id') ?: '').toString()
+
+modrinth {
+    token = modrinthToken
+    projectId = modrinthProjectId
+    versionNumber = "${mod_version}"
+    versionName = "${mod_name} ${mod_version} for NeoForge ${minecraft_version}"
+    versionType = 'release'
+    uploadFile = tasks.named('jar')
+    gameVersions = [minecraft_version]
+    loaders = ['neoforge']
+    changelog = changelogText
+    syncBodyFrom = readmeText
+}
+
+tasks.named('modrinth').configure {
+    doFirst {
+        if (!modrinthProjectId) {
+            throw new GradleException("modrinth_project_id is empty - create the project on modrinth.com and put its id in gradle.properties")
+        }
+        if (!modrinthToken.isPresent()) {
+            throw new GradleException("MODRINTH_TOKEN is not set - export a write token from modrinth.com/settings/pats")
+        }
+    }
+}
+
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    group = 'publishing'
+    description = 'Uploads the built jar to CurseForge.'
+    apiToken = curseforgeToken.getOrElse('')
+
+    var artifact = upload(curseforgeProjectId ?: '0', tasks.named('jar'))
+    artifact.releaseType = 'release'
+    artifact.changelog = changelogText.getOrElse('')
+    artifact.changelogType = 'markdown'
+    artifact.addModLoader('NeoForge')
+    artifact.addGameVersion(minecraft_version)
+    artifact.addJavaVersion('Java 21')
+
+    doFirst {
+        if (!curseforgeProjectId) {
+            throw new GradleException("curseforge_project_id is empty - create the project on curseforge.com and put its numeric id in gradle.properties")
+        }
+        if (!curseforgeToken.isPresent()) {
+            throw new GradleException("CURSEFORGE_TOKEN is not set - generate one at legacy.curseforge.com/account/api-tokens")
+        }
+    }
+}
+
+/** Uploads to both sites in one go. */
+tasks.register('publishRelease') {
+    group = 'publishing'
+    description = 'Uploads the built jar to Modrinth and CurseForge.'
+    dependsOn 'build', 'modrinth', 'publishCurseForge'
+}

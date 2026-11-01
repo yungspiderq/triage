@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "minecraft:leather" },
+    { "item": "minecraft:string" },
+    { "item": "minecraft:stick" }
+  ],
+  "result": {
+    "id": "triage:tourniquet",
+    "count": 2
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "whisper": {
+    "category": "ambient",
+    "subtitle": "triage.subtitle.whisper",
+    "sounds": [
+      "triage:whisper/whisper_0",
+      "triage:whisper/whisper_1",
+      "triage:whisper/whisper_2",
+      "triage:whisper/whisper_3",
+      "triage:whisper/whisper_4",
+      "triage:whisper/whisper_5",
+      "triage:whisper/whisper_6",
+      "triage:whisper/whisper_7",
+      "triage:whisper/whisper_8",
+      "triage:whisper/whisper_9",
+      "triage:whisper/whisper_10",
+      "triage:whisper/whisper_11",
+      "triage:whisper/whisper_12",
+      "triage:whisper/whisper_13",
+      "triage:whisper/whisper_14",
+      "triage:whisper/whisper_15",
+      "triage:whisper/whisper_16",
+      "triage:whisper/whisper_17",
+      "triage:whisper/whisper_18",
+      "triage:whisper/whisper_19"
+    ]
+  }
+}
