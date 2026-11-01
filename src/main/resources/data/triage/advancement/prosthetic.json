@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "triage:wooden_leg"
+    },
+    "title": {
+      "translate": "triage.advancement.prosthetic.title"
+    },
+    "description": {
+      "translate": "triage.advancement.prosthetic.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:amputation"
+}

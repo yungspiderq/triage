@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:golden_apple"
+    },
+    "title": {
+      "translate": "triage.advancement.medic.title"
+    },
+    "description": {
+      "translate": "triage.advancement.medic.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:field_dressing"
+}

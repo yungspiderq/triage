@@ -1,0 +1,58 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Run directories
+run/
+run*/
+logs/
+crash-reports/
+saves/
+world/
+downloads/
+resourcepacks/
+shaderpacks/
+mods/
+
+# Third-party compile-only jars (not redistributable)
+libs/**/*.jar
+!libs/README.md
+
+# Release binaries belong in GitHub Releases, not in git
+release/**/*.jar
+release/**/*.zip
+release/**/*.sha256
+
+# Logs and dumps
+*.log
+cp.txt
+hs_err_pid*
+replay_pid*
+
+# IDE and OS
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+*.token
+github_token.txt
+
+# Generated tool output
+_tools/gen/
+_tools/**/__pycache__/
+__pycache__/
+*.pyc
+
+# Release packages: binaries belong in GitHub Releases, not in git
+release/

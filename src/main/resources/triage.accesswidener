@@ -1,0 +1,32 @@
+accessWidener	v2	named
+
+# Five things NeoForge opens for every mod and Fabric asks to be asked about. Nothing
+# here is widened for convenience: each one is reached by code carried from the other
+# tree, where it compiles because the loader had already opened it.
+
+# The list of layers a living thing is drawn with, and the way to add one.
+#
+# Two of the mod's layers are not added to the list - they replace vanilla ones in place,
+# which is the whole point of them: armour has to decide about a limb that is not there,
+# and there is no seam between the vanilla armour layer and the body underneath. Replaced
+# at the same index so that everything drawn afterwards - the cape, the elytra, the arrows
+# sticking out of somebody - still comes afterwards.
+accessible	field	net/minecraft/client/renderer/entity/LivingEntityRenderer	layers	Ljava/util/List;
+accessible	method	net/minecraft/client/renderer/entity/LivingEntityRenderer	addLayer	(Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
+
+# Which of the two player models this renderer draws. The armour layer that replaces the
+# vanilla one has to be built for the same one, or every slim player wears wide sleeves.
+accessible	field	net/minecraft/client/model/PlayerModel	slim	Z
+
+# Where the inventory window starts, so the button that opens the chart sits beside it
+# rather than at a guessed offset from the corner of the screen.
+accessible	field	net/minecraft/client/gui/screens/inventory/AbstractContainerScreen	leftPos	I
+accessible	field	net/minecraft/client/gui/screens/inventory/AbstractContainerScreen	topPos	I
+
+# The two lists a jigsaw pool keeps. There is no API for adding a building to a village
+# and no datapack way either - a template pool can only be replaced, never appended to,
+# and replacing minecraft:village/plains/houses would throw away every other mod's
+# buildings with it. So the clinic is added to the list generation actually reads, which
+# is what every mod that ships a village building does.
+accessible	field	net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool	templates	Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+accessible	field	net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool	rawTemplates	Ljava/util/List;

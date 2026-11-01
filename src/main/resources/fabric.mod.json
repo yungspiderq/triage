@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    "${authors}"
+  ],
+  "license": "${license}",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.claudemods.triage.TriageMod"
+    ],
+    "client": [
+      "com.claudemods.triage.client.TriageClient"
+    ]
+  },
+  "mixins": [
+    "triage.mixins.json",
+    {
+      "config": "triage.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "accessWidener": "triage.accesswidener"
+}

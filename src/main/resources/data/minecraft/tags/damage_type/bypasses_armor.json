@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "triage:bleeding",
+    "triage:pain",
+    "triage:sepsis"
+  ]
+}

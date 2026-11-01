@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "minecraft:sugar" },
+    { "item": "minecraft:glowstone_dust" },
+    { "item": "minecraft:brown_mushroom" }
+  ],
+  "result": {
+    "id": "triage:painkillers",
+    "count": 2
+  }
+}

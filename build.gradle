@@ -1,0 +1,69 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'java'
+}
+
+version = project.mod_version
+group = project.mod_group_id
+
+base {
+    archivesName = "triage-fabric-${project.minecraft_version}"
+}
+
+loom {
+    // Opens a few vanilla members; the file says which and why.
+    accessWidenerPath = file("src/main/resources/triage.accesswidener")
+
+}
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Mojang mappings rather than Yarn, and this is the whole reason the port is
+    // possible at all: every class, method and field in the forty thousand lines being
+    // carried over from the other two trees is spelled the way Mojang spells it. On Yarn
+    // the shared half of this mod would have to be rewritten line by line.
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'id', project.mod_id
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version,
+                'id': project.mod_id,
+                'name': project.mod_name,
+                'description': project.mod_description,
+                'authors': project.mod_authors,
+                'license': project.mod_license,
+                'minecraft_version': project.minecraft_version,
+                'loader_version': project.loader_version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+    it.options.encoding = 'UTF-8'
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+// Straight into a world rather than the title screen when there is one to go to:
+// everything this mod draws is drawn over a body, and a title screen has no body in it to
+// test with. Only a development convenience, and skipped when the world is not there, so
+// a fresh checkout still opens the menu like any other.
+tasks.named('runClient') {
+    if (file('run/saves/devworld/level.dat').exists()) {
+        args '--quickPlaySingleplayer', 'devworld'
+    }
+}
