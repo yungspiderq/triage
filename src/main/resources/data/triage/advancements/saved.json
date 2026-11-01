@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "triage:surgical_kit"
+    },
+    "title": {
+      "translate": "triage.advancement.saved.title"
+    },
+    "description": {
+      "translate": "triage.advancement.saved.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "triage:medic",
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ]
+}

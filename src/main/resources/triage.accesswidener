@@ -1,0 +1,24 @@
+accessWidener	v2	named
+
+# What Forge opens for every mod and Fabric asks to be asked about. Each one is reached by
+# code carried from the Forge tree, where it compiles because the loader had already opened
+# it - or, in two cases, because that tree opened it with reflection at runtime instead.
+
+# Where a blast was. There is no getter on 1.20.1; Forge adds one. See compat/Blasts.java.
+accessible	field	net/minecraft/world/level/Explosion	x	D
+accessible	field	net/minecraft/world/level/Explosion	y	D
+accessible	field	net/minecraft/world/level/Explosion	z	D
+
+# Which of the two player models a renderer draws. The armour layer that replaces the
+# vanilla one has to be built for the same one, or every slim player wears wide sleeves.
+accessible	field	net/minecraft/client/model/PlayerModel	slim	Z
+
+# The way a layer is added to a body. The list itself is not opened here: that one is
+# reached through Reach, the same as in the Forge tree, because two of the mod's layers
+# replace vanilla ones in place rather than stacking on top of them.
+accessible	method	net/minecraft/client/renderer/entity/LivingEntityRenderer	addLayer	(Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
+
+# Where the inventory window starts, so the button that opens the chart sits beside it
+# rather than at a guessed offset from the corner of the screen.
+accessible	field	net/minecraft/client/gui/screens/inventory/AbstractContainerScreen	leftPos	I
+accessible	field	net/minecraft/client/gui/screens/inventory/AbstractContainerScreen	topPos	I

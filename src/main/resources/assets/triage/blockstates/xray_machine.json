@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "triage:block/xray_machine"
+    }
+  }
+}

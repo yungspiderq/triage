@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "triage:bone_saw"
+    },
+    "title": {
+      "translate": "triage.advancement.amputation.title"
+    },
+    "description": {
+      "translate": "triage.advancement.amputation.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:sawbones"
+}

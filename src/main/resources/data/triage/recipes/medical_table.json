@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BB",
+    "PP"
+  ],
+  "key": {
+    "B": {
+      "item": "triage:bandage"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "triage:medical_table"
+  }
+}

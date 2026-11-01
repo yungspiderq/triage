@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 2,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "triage:bandage",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 1.0, "max": 2.0 }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:string",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 2.0, "max": 4.0 }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "triage:triage_tag",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": { "min": 1.0, "max": 3.0 }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "triage:splint",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "triage:antiseptic",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "triage:bandage"
+    },
+    "title": {
+      "translate": "triage.advancement.field_dressing.title"
+    },
+    "description": {
+      "translate": "triage.advancement.field_dressing.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:first_wound"
+}
