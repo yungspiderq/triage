@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "triage:block/xray_machine_side",
+    "down": "triage:block/xray_machine_side",
+    "up": "triage:block/xray_machine_top",
+    "north": "triage:block/xray_machine_front",
+    "south": "triage:block/xray_machine_side",
+    "east": "triage:block/xray_machine_side",
+    "west": "triage:block/xray_machine_side"
+  }
+}

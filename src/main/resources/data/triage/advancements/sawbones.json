@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "triage:surgical_kit"
+    },
+    "title": {
+      "translate": "triage.advancement.sawbones.title"
+    },
+    "description": {
+      "translate": "triage.advancement.sawbones.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlocked"
+    ]
+  ],
+  "parent": "triage:bone_setter"
+}

@@ -1,0 +1,115 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    // The loader is in the file name because there are now four of them and a
+    // download folder full of triage-1.20.1-1.9.0.jar tells nobody which is which.
+    archivesName = "${mod_id}-forge-${minecraft_version}"
+}
+
+// 1.20.1 ships Java 17 to end users. This is the one line that makes the port a separate
+// tree rather than a branch: the 1.21.1 build is on 21 and the two cannot share a
+// toolchain, a mappings set or a modding platform.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+
+    // Same reason as on the other side: village pools have no append API, so the clinic
+    // is added at runtime to the list the jigsaw generator reads.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            // -PquickPlay=<world folder> drops this client straight into a save instead of
+            // the main menu. The data pack is only read when a world loads, so this is the
+            // cheapest way to find out whether the pack ported - and a dedicated server is
+            // not, because that one wants the EULA accepted first.
+            if (project.hasProperty('quickPlay')) {
+                args '--quickPlaySingleplayer', project.property('quickPlay').toString()
+            }
+            // -PjoinServer=localhost goes straight to a server instead. Half of what this
+            // mod does needs two players, and a dedicated server is the only place the
+            // client/server split is honest about itself.
+            if (project.hasProperty('joinServer')) {
+                args '--quickPlayMultiplayer', project.property('joinServer').toString()
+            }
+        }
+
+        server {
+            workingDirectory project.file('run-server')
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all',
+                    '--output', file('src/generated/resources/'),
+                    '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replacements = [
+            minecraft_version   : minecraft_version,
+            forge_version       : forge_version,
+            mod_id              : mod_id,
+            mod_name            : mod_name,
+            mod_license         : mod_license,
+            mod_version         : mod_version,
+            mod_authors         : mod_authors,
+            mod_description     : mod_description,
+    ]
+    inputs.properties replacements
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replacements
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'   : mod_id,
+                'Specification-Vendor'  : mod_authors,
+                'Specification-Version' : '1',
+                'Implementation-Title'  : project.name,
+                'Implementation-Version': project.jar.archiveVersion,
+                'Implementation-Vendor' : mod_authors,
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
